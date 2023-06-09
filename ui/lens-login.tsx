@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { client, challenge, authenticate } from "@/lib/lens-client";
 
-export function LensLogin({ address, setAddress }) {
-  /* local state variables to hold user's address and access token */
-  const [token, setToken] = useState();
-
+export function LensLogin({ address, setAddress, token, setToken }) {
   useEffect(() => {
     /* when the app loads, check to see if the user has already connected their wallet */
     checkConnection();
@@ -67,16 +64,17 @@ export function LensLogin({ address, setAddress }) {
   return (
     <div>
       {/* if the user has not yet connected their wallet, show a connect button */}
-      {!address && <button onClick={connect}>Connect</button>}
+      {!address && (
+        <button onClick={connect} className="btn btn-primary">
+          Connect
+        </button>
+      )}
       {/* if the user has connected their wallet but has not yet authenticated, show them a login button */}
       {address && !token && (
-        <div onClick={login}>
-          <button>Login</button>
-        </div>
+        <button onClick={login} className="btn btn-primary">
+          Login
+        </button>
       )}
-      {/* once the user has authenticated, show them a success message */}
-      {address && token && <h2>Successfully signed in!</h2>}
-      {address}
     </div>
   );
 }

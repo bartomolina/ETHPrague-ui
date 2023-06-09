@@ -10,7 +10,7 @@ import { splitSignature } from "ethers/lib/utils.js";
 
 import { omit } from "@/lib/utils";
 
-export function ModuleSelector({ profile }) {
+export function ModuleSelector({ profile, token }) {
   async function updateModule() {
     try {
       const typedResult = await client.mutate({
@@ -56,12 +56,18 @@ export function ModuleSelector({ profile }) {
 
   return (
     <>
-      <div>{profile?.followModule ? profile.followModule.type : "Not set"}</div>
-      <div>{profile?.handle}</div>
-      <div>{profile?.id}</div>
-      <div onClick={updateModule}>
-        <button>Update Follow Module</button>
-      </div>
+      {token && (
+        <>
+          {/* <div>
+            {profile?.followModule ? profile.followModule.type : "Not set"}
+          </div>
+          <div>{profile?.handle}</div>
+          <div>{profile?.id}</div> */}
+          <button onClick={updateModule} className="btn btn-primary">
+            Upgrade profile
+          </button>
+        </>
+      )}
     </>
   );
 }

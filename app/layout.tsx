@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
 
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
+const space_grotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",
@@ -15,9 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html data-theme="light" lang="en">
-      <body className={inter.className}>
-        <div className="px-6 pb-16 xl:pr-2">{children}</div>
+    <html data-theme="lemonade" lang="en">
+      <body
+        className={`flex h-screen bg-orange-100 ${space_grotesk.className}`}
+      >
+        <div className="m-auto rounded-2xl max-w-xl bg-white p-10 text-center">
+          {children}
+        </div>
       </body>
     </html>
   );
