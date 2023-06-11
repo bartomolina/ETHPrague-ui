@@ -31,15 +31,13 @@ export default function RootLayout({
                 alt="Logo"
                 width={350}
                 height={350}
-                className="w-full"
+                className="m-auto"
               />
               <div className="flex justify-between">
                 <Menu />
                 <LensLogout />
               </div>
-              <div className="rounded-2xl bg-white p-10 text-center">
-                {children}
-              </div>
+              <div>{children}</div>
             </div>
           </LensProvider>
         </WagmiConfig>

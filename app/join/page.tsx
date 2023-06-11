@@ -18,20 +18,17 @@ export default function Home() {
 
   const joinOrganization = async () => {
     if (activeProfile) {
-      console.log("joining organization");
       setJoiningOrg(true);
-      console.log("write contract");
 
       writeContract({
         mode: "recklesslyUnprepared",
-        address: "0x29677ac9Bb74d50375B3795DcD3d63e587175016",
+        address: process.env
+          .NEXT_PUBLIC_MOSAIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: mosaicAbi,
         functionName: "joinOrganization",
-        args: [linkedAccount, Number.parseInt(activeProfile.id, 16), secret],
+        args: [linkedAccount, activeProfile.handle, secret],
       })
         .then((hash) => {
-          console.log("done writting contract");
-
           return waitForTransaction(hash);
         })
         .then(() => {
@@ -47,7 +44,7 @@ export default function Home() {
     if (activeProfile) {
       getAccount(
         "0x60ae865ee4c725cd04353b5aab364553f56cef82", // ERC-712 contract address
-        Number.parseInt(activeProfile.id, 16).toString(), // ERC-721 token ID
+        process.env.NEXT_PUBLIC_DEFAULT_ORG_ID as string, // ERC-721 token ID
         provider
       ).then((address) => {
         setLinkedAccount(address);
@@ -57,7 +54,7 @@ export default function Home() {
   }, [activeProfile, provider]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 rounded-2xl bg-white p-10 text-center">
       <h1 className="text-xl font-bold text-green-800">Join organization</h1>
       <h2 className="font-bold">@lensprotocol.lens</h2>
       <Image

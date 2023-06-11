@@ -58,6 +58,38 @@ export const mosaicAbi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "uint256",
+        name: "_fromTokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_toTokenId",
+        type: "uint256",
+      },
+    ],
+    name: "BatchMetadataUpdate",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "MetadataUpdate",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "previousOwner",
@@ -151,6 +183,25 @@ export const mosaicAbi = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "profileId",
+        type: "string",
+      },
+    ],
+    name: "formatJSON",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
@@ -199,9 +250,9 @@ export const mosaicAbi = [
         type: "address",
       },
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "profileId",
-        type: "uint256",
+        type: "string",
       },
       {
         internalType: "string",

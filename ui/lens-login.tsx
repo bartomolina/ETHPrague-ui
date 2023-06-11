@@ -28,7 +28,7 @@ export function LensLogin() {
   };
 
   return (
-    <div>
+    <div className="text-center">
       {!activeProfile && (
         <button
           disabled={isLoginPending}
