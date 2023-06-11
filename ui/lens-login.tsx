@@ -1,78 +1,41 @@
-/* app/page.tsx */
 "use client";
 
-import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { client, challenge, authenticate } from "@/lib/lens-client";
+import { useActiveProfile, useWalletLogin } from "@lens-protocol/react-web";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 
-export function LensLogin({ address, setAddress, token, setToken }) {
-  useEffect(() => {
-    /* when the app loads, check to see if the user has already connected their wallet */
-    checkConnection();
-  }, []);
+export function LensLogin() {
+  const { execute: login, isPending: isLoginPending } = useWalletLogin();
+  const { data: activeProfile } = useActiveProfile();
+  const { isConnected } = useAccount();
+  const { disconnectAsync } = useDisconnect();
 
-  async function checkConnection() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const accounts = await provider.listAccounts();
-    if (accounts.length) {
-      setAddress(accounts[0]);
-    }
-  }
-  async function connect() {
-    /* this allows the user to connect their wallet */
-    const account = await window.ethereum.send("eth_requestAccounts");
-    if (account.result.length) {
-      setAddress(account.result[0]);
-    }
-  }
+  const { connectAsync } = useConnect({
+    connector: new InjectedConnector(),
+  });
 
-  async function login() {
-    try {
-      /* first request the challenge from the API server */
-      const challengeInfo = await client.query({
-        query: challenge,
-        variables: { address },
-      });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      /* ask the user to sign a message with the challenge info returned from the server */
-      const signature = await signer.signMessage(
-        challengeInfo.data.challenge.text
-      );
-      /* authenticate the user */
-      const authData = await client.mutate({
-        mutation: authenticate,
-        variables: {
-          address,
-          signature,
-        },
-      });
-      /* if user authentication is successful, you will receive an accessToken and refreshToken */
-      const {
-        data: {
-          authenticate: { accessToken },
-        },
-      } = authData;
-      console.log({ accessToken });
-      setToken(accessToken);
-      window.localStorage.setItem("lens-jwt", accessToken);
-    } catch (err) {
-      console.log("Error signing in: ", err);
+  const onLoginClick = async () => {
+    if (isConnected) {
+      await disconnectAsync();
     }
-  }
+
+    const { connector } = await connectAsync();
+
+    if (connector instanceof InjectedConnector) {
+      const signer = await connector.getSigner();
+      await login(signer);
+    }
+  };
 
   return (
     <div>
-      {/* if the user has not yet connected their wallet, show a connect button */}
-      {!address && (
-        <button onClick={connect} className="btn btn-primary">
-          Connect
-        </button>
-      )}
-      {/* if the user has connected their wallet but has not yet authenticated, show them a login button */}
-      {address && !token && (
-        <button onClick={login} className="btn btn-primary">
-          Login
+      {!activeProfile && (
+        <button
+          disabled={isLoginPending}
+          onClick={onLoginClick}
+          className="btn-primary btn"
+        >
+          Log in
         </button>
       )}
     </div>
